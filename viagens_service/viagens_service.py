@@ -1,7 +1,9 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 
 app = Flask(__name__)
 
+CORS(app, supports_credentials=True)
 viagens = {}
 
 @app.route("/viagens", methods=["POST"])
@@ -30,4 +32,4 @@ def reservar_lugar(id):
     return jsonify({"status": "lotado"}), 400
 
 if __name__ == "__main__":
-    app.run(port=5002)
+    app.run(port=5006)

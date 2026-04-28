@@ -1,30 +1,17 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request
+from flask_cors import CORS
 
 app = Flask(__name__)
 
-clientes = {}
+CORS(app, resources={r"/*": {"origins": "*"}})
 
-@app.route("/clientes", methods=["POST"])
-def criar_cliente():
-    data = request.json
-    cliente_id = str(len(clientes) + 1)
-    clientes[cliente_id] = {
-        "id": cliente_id,
-        "nome": data["nome"],
-        "email": data["email"],
-        "historico": []
-    }
-    return jsonify(clientes[cliente_id]), 201
+@app.before_request
+def before():
+    print(">>> REQUEST CHEGOU:", request.method, request.path)
 
-@app.route("/clientes/<id>", methods=["GET"])
-def obter_cliente(id):
-    return jsonify(clientes.get(id, {}))
-
-@app.route("/clientes/<id>/historico", methods=["POST"])
-def adicionar_historico(id):
-    data = request.json
-    clientes[id]["historico"].append(data)
-    return jsonify(clientes[id])
+@app.route("/clientes", methods=["POST", "OPTIONS", "GET"])
+def clientes():
+    return {"ok": True, "method": request.method}
 
 if __name__ == "__main__":
-    app.run(port=5001)
+    app.run(port=5004, debug=True)

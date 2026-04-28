@@ -1,7 +1,10 @@
 from flask import Flask, request, jsonify
 import requests
+from flask_cors import CORS
 
 app = Flask(__name__)
+
+CORS(app, supports_credentials=True)
 
 RESERVAS = {}
 
@@ -45,4 +48,4 @@ def listar_reservas():
     return jsonify(RESERVAS)
 
 if __name__ == "__main__":
-    app.run(port=5003)
+    app.run(port=5005)
