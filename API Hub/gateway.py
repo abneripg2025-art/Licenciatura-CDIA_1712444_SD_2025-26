@@ -1,7 +1,10 @@
 from flask import Flask, request, jsonify
 import requests
+from flask_cors import CORS
 
 app = Flask(__name__)
+
+CORS(app, supports_credentials=True)
 
 CLIENTES_URL = "http://localhost:5001"
 VIAGENS_URL = "http://localhost:5002"
