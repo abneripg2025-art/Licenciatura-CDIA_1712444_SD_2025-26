@@ -40,5 +40,10 @@ def listar_reservas():
     res = requests.get(f"{RESERVAS_URL}/reservas")
     return jsonify(res.json())
 
+@app.route('/reservas/<int:id>', methods=['DELETE'])
+def cancelar_reserva(id):
+    res = requests.delete(f"{RESERVAS_URL}/reservas/{id}")
+    return jsonify(res.json()), res.status_code
+
 if __name__ == '__main__':
     app.run(port=5000)
