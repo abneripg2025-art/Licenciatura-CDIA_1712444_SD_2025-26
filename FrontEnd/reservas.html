@@ -7,7 +7,7 @@
   </head>
   <body>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
       <div class="container-fluid">
         <a class="navbar-brand" href="index.html">Gestão de Viagens</a>
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -26,20 +26,32 @@
       </div>
     </nav>
 
-  <div class="container">
-      <h2>Reservas</h2>
+    <div class="container">
+        <h2>Reservas</h2>
 
-      <div class="row mb-3">
-          <div class="col">
-              <select id="cliente"></select>
-          </div>
-          <div class="col">
-              <select id="viagem"></select>
-          </div>
-          <div class="col">
-              <button class="btn btn-warning" onclick="criar()">Reservar</button>
-          </div>
+        <div class="row mb-4 align-items-end">
+
+      <div class="col-md-3">
+          <label class="form-label">Cliente</label>
+          <select id="cliente" class="form-select">
+              <option disabled selected>Selecione um cliente</option>
+          </select>
       </div>
+
+      <div class="col-md-3">
+          <label class="form-label">Viagem</label>
+          <select id="viagem" class="form-select">
+              <option disabled selected>Selecione uma viagem</option>
+          </select>
+      </div>
+
+      <div class="col-md-1 d-grid">
+          <button class="btn btn-success">
+              Reservar
+          </button>
+      </div>
+
+    </div>
 
       <table class="table">
           <thead>
@@ -78,7 +90,12 @@
               <td>${c?.nome}</td>
               <td>${v?.destino}</td>
               <td>${r.status}</td>
-              <td><button class="btn btn-danger btn-sm" onclick="cancelar(${r.id})">Cancelar</button></td>
+              <td>
+                  ${r.status !== "cancelada"
+                      ? `<button class="btn btn-danger btn-sm" onclick="cancelar(${r.id})">Cancelar</button>`
+                      : `<span class="text-muted">Cancelada</span>`
+                  }
+              </td>
           </tr>`;
       }).join("");
   }
