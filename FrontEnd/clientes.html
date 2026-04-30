@@ -1,66 +1,75 @@
 <!DOCTYPE html>
 <html>
-<head>
-<title>Clientes</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8">
+    <title>Clientes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  </head>
+  <body>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="index.html">Sistema</a>
-    <div>
-      <a class="btn btn-outline-light me-2" href="clientes.html">Clientes</a>
-      <a class="btn btn-outline-light me-2" href="viagens.html">Viagens</a>
-      <a class="btn btn-outline-light" href="reservas.html">Reservas</a>
-    </div>
+      <div class="container-fluid">
+        <a class="navbar-brand" href="index.html">Gestão de Viagens</a>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="clientes.html">Clientes</a>
+                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="viagens.html">Viagens</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="reservas.html">Reservas</a>
+                </li>
+            </ul>
+        </div>
+      </div>
+    </nav>
+
+  <div class="container">
+      <h2>Clientes</h2>
+
+      <div class="row mb-3">
+          <div class="col">
+              <input id="nome" class="form-control" placeholder="Nome">
+          </div>
+          <div class="col">
+              <input id="email" class="form-control" placeholder="Email">
+          </div>
+          <div class="col">
+              <button class="btn btn-primary" onclick="criarCliente()">Criar</button>
+          </div>
+      </div>
+
+      <table class="table">
+          <thead><tr><th>ID</th><th>Nome</th><th>Email</th></tr></thead>
+          <tbody id="tabela"></tbody>
+      </table>
   </div>
-</nav>
 
-<div class="container">
-    <h2>Clientes</h2>
+  <script>
+    const API = "http://localhost:5000";
 
-    <div class="row mb-3">
-        <div class="col">
-            <input id="nome" class="form-control" placeholder="Nome">
-        </div>
-        <div class="col">
-            <input id="email" class="form-control" placeholder="Email">
-        </div>
-        <div class="col">
-            <button class="btn btn-primary" onclick="criarCliente()">Criar</button>
-        </div>
-    </div>
+    async function carregar() {
+        const res = await fetch(`${API}/clientes`);
+        const data = await res.json();
 
-    <table class="table">
-        <thead><tr><th>ID</th><th>Nome</th><th>Email</th></tr></thead>
-        <tbody id="tabela"></tbody>
-    </table>
-</div>
+        tabela.innerHTML = data.map(c =>
+            `<tr><td>${c.id}</td><td>${c.nome}</td><td>${c.email}</td></tr>`
+        ).join("");
+    }
 
-<script>
-  const API = "http://localhost:5000";
+    async function criarCliente() {
+        await fetch(`${API}/clientes`, {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({ nome: nome.value, email: email.value })
+        });
+        carregar();
+    }
 
-  async function carregar() {
-      const res = await fetch(`${API}/clientes`);
-      const data = await res.json();
+    carregar();
+  </script>
 
-      tabela.innerHTML = data.map(c =>
-          `<tr><td>${c.id}</td><td>${c.nome}</td><td>${c.email}</td></tr>`
-      ).join("");
-  }
-
-  async function criarCliente() {
-      await fetch(`${API}/clientes`, {
-          method: "POST",
-          headers: {"Content-Type": "application/json"},
-          body: JSON.stringify({ nome: nome.value, email: email.value })
-      });
-      carregar();
-  }
-
-  carregar();
-</script>
-
-</body>
+  </body>
 </html>
