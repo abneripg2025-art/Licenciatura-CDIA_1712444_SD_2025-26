@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Reservas</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="index.html">Sistema</a>
+    <div>
+      <a class="btn btn-outline-light me-2" href="clientes.html">Clientes</a>
+      <a class="btn btn-outline-light me-2" href="viagens.html">Viagens</a>
+      <a class="btn btn-outline-light" href="reservas.html">Reservas</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+    <h2>Reservas</h2>
+
+    <div class="row mb-3">
+        <div class="col">
+            <select id="cliente"></select>
+        </div>
+        <div class="col">
+            <select id="viagem"></select>
+        </div>
+        <div class="col">
+            <button class="btn btn-warning" onclick="criar()">Reservar</button>
+        </div>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr><th>ID</th><th>Cliente</th><th>Viagem</th><th>Status</th><th></th></tr>
+        </thead>
+        <tbody id="tabela"></tbody>
+    </table>
+</div>
+
+<script>
+const API = "http://localhost:5000";
+
+let clientes = [];
+let viagens = [];
+
+async function carregar() {
+    clientes = await (await fetch(`${API}/clientes`)).json();
+    viagens = await (await fetch(`${API}/viagens`)).json();
+    const reservas = await (await fetch(`${API}/reservas`)).json();
+
+    cliente.innerHTML = clientes.map(c =>
+        `<option value="${c.id}">${c.nome}</option>`
+    ).join("");
+
+    viagem.innerHTML = viagens.map(v =>
+        `<option value="${v.id}">${v.destino}</option>`
+    ).join("");
+
+    tabela.innerHTML = reservas.map(r => {
+        const c = clientes.find(x => x.id === r.cliente_id);
+        const v = viagens.find(x => x.id === r.viagem_id);
+
+        return `
+        <tr>
+            <td>${r.id}</td>
+            <td>${c?.nome}</td>
+            <td>${v?.destino}</td>
+            <td>${r.status}</td>
+            <td><button class="btn btn-danger btn-sm" onclick="cancelar(${r.id})">Cancelar</button></td>
+        </tr>`;
+    }).join("");
+}
+
+async function criar() {
+    await fetch(`${API}/reservas`, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            cliente_id: parseInt(cliente.value),
+            viagem_id: parseInt(viagem.value)
+        })
+    });
+    carregar();
+}
+
+async function cancelar(id) {
+    await fetch(`${API}/reservas/${id}`, { method: "DELETE" });
+    carregar();
+}
+
+carregar();
+</script>
+
+</body>
+</html>
