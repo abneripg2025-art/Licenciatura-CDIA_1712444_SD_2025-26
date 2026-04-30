@@ -1,0 +1,7 @@
+
+Ordem de Execução:
+
+1. clientes_service.py
+2. viagens_service.py
+3. reservas_service.py
+4. gateway.py
