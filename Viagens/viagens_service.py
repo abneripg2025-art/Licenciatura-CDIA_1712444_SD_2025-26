@@ -37,5 +37,12 @@ def reservar_vaga(id):
         return jsonify({"msg": "Vaga reservada"})
     return jsonify({"erro": "Sem vagas"}), 400
 
+@app.route('/viagens/<int:id>/liberar', methods=['PUT'])
+def liberar_vaga(id):
+    if id in viagens:
+        viagens[id]["vagas"] += 1
+        return jsonify({"msg": "Vaga liberada"})
+    return jsonify({"erro": "Viagem não encontrada"}), 404
+
 if __name__ == '__main__':
     app.run(port=5002)

@@ -45,8 +45,20 @@ def listar_reservas():
 @app.route('/reservas/<int:id>', methods=['DELETE'])
 def cancelar_reserva(id):
     if id in reservas:
-        reservas[id]["status"] = "cancelada"
-        return jsonify(reservas[id])
+        reserva = reservas[id]
+
+        if reserva["status"] == "cancelada":
+            return jsonify({"erro": "Reserva já cancelada"}), 400
+
+        viagem_id = reserva["viagem_id"]
+
+        # libera vaga na viagem
+        requests.put(f"{VIAGENS_URL}/viagens/{viagem_id}/liberar")
+
+        reserva["status"] = "cancelada"
+
+        return jsonify(reserva)
+
     return jsonify({"erro": "Reserva não encontrada"}), 404
 
 if __name__ == '__main__':
