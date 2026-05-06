@@ -138,7 +138,7 @@
             <div class="content flex-fill">
 
                 <!-- CLIENTES -->
-            <div id="clientes">
+                <div id="clientes">
                 <h3 class="mb-3">Clientes</h3>
 
                 <div class="card-modern p-3 mb-3">
@@ -175,9 +175,16 @@
                     </div>
                 </div>
 
-    <!-- LISTA DE CLIENTES -->
-    <div id="clientesLista" class="row"></div>
-</div>
+               <div class="mb-3">
+                <input
+                    id="searchClientes"
+                    class="form-control"
+                    placeholder="🔎 Pesquisar clientes por nome ou email..."
+                    oninput="filtrarClientes()"
+                >
+            </div>
+            <div id="clientesLista" class="row"></div>
+        </div>
                 <!-- VIAGENS -->
                 <div id="viagens" style="display:none;">
                     <h3 class="mb-3">Viagens</h3>
@@ -234,6 +241,14 @@
 
                         </div>
 
+                    </div>
+                    <div class="mb-3">
+                        <input
+                            id="searchViagens"
+                            class="form-control"
+                            placeholder="🔎 Pesquisar por voo, origem ou destino..."
+                            oninput="filtrarViagens()"
+                        >
                     </div>
 
                     <div id="viagensLista" class="row"></div>

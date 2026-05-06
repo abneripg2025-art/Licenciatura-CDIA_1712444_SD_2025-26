@@ -115,6 +115,27 @@ function renderClientes() {
     `).join("");
 }
 
+function renderClientesFiltrados(lista) {
+    clientesLista.innerHTML = lista.map(c => `
+        <div class="col-md-4">
+            <div class="card-modern p-3 mb-3">
+                <h5>${c.nome}</h5>
+                <small class="text-muted">${c.email}</small>
+
+                <div class="mt-2 d-flex gap-2">
+                    <button class="btn btn-light btn-sm" onclick="editarCliente(${c.id})">
+                        <i class="bi bi-pencil"></i>
+                    </button>
+
+                    <button class="btn btn-light btn-sm" onclick="deletarCliente(${c.id})">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    `).join("");
+}
+
 async function criarCliente() {
     await fetch(`${API}/clientes`, {
         method: "POST",
@@ -177,38 +198,60 @@ async function verHistorico(clienteId) {
     const res = await fetch(`${API}/clientes/${clienteId}/historico`);
     const historico = await res.json();
 
-    console.log("HISTÓRICO:", historico);
-
     const container = document.getElementById("historicoConteudo");
 
-    // 🔥 PROTEÇÃO IMPORTANTE
-    if (!Array.isArray(historico)) {
-        container.innerHTML = `
-            <div class="text-danger text-center">
-                Erro ao carregar histórico
-            </div>
-        `;
-        return;
-    }
-
-    if (historico.length === 0) {
+    if (!Array.isArray(historico) || historico.length === 0) {
         container.innerHTML = `
             <div class="text-center text-muted">
                 Sem reservas encontradas
             </div>
         `;
     } else {
-        container.innerHTML = `
-            <div class="list-group">
-                ${historico.map(r => `
-                    <div class="list-group-item">
-                        <strong>Reserva #${r.id}</strong><br>
-                        Viagem: ${r.viagem_id}<br>
-                        Status: ${r.status}
+
+        container.innerHTML = historico.map(r => {
+
+            const v = r.viagem;
+
+            return `
+                <div class="card mb-2 p-3">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+
+                            <h6 class="mb-1">
+                                ✈️ ${v?.codigo_voo || "Voo desconhecido"}
+                            </h6>
+
+                            <small class="text-muted">
+                                ${v?.origem || "?"} → ${v?.destino || "?"}
+                            </small><br>
+
+                            <small class="text-muted">
+                                ${v?.companhia || ""}
+                            </small><br>
+
+                            <small class="text-muted">
+                                📅 ${v?.data || ""} ${v?.hora || ""}
+                            </small>
+
+                        </div>
+
+                        <div class="text-end">
+
+                            <span class="badge bg-${
+                                r.status === 'confirmada' ? 'success' : 'secondary'
+                            }">
+                                ${r.status}
+                            </span>
+
+                        </div>
+
                     </div>
-                `).join("")}
-            </div>
-        `;
+
+                </div>
+            `;
+        }).join("");
     }
 
     new bootstrap.Modal(
@@ -221,6 +264,17 @@ async function deletarCliente(id) {
 
     await fetch(`${API}/clientes/${id}`, { method: "DELETE" });
     carregar();
+}
+
+function filtrarClientes() {
+    const termo = document.getElementById("searchClientes").value.toLowerCase();
+
+    const filtrados = clientes.filter(c =>
+        (c.nome || "").toLowerCase().includes(termo) ||
+        (c.email || "").toLowerCase().includes(termo)
+    );
+
+    renderClientesFiltrados(filtrados);
 }
 
 // ==================== VIAGENS ====================
@@ -288,6 +342,30 @@ function renderViagens() {
                         </button>
                     </div>
 
+                </div>
+
+            </div>
+        </div>
+    `).join("");
+}
+
+function renderViagensFiltradas(lista) {
+    viagensLista.innerHTML = lista.map(v => `
+        <div class="col-md-4">
+            <div class="card-modern p-3 mb-3">
+
+                <h5>${v.origem} → ${v.destino}</h5>
+
+                <div class="text-muted">
+                    ${v.codigo_voo} • ${v.companhia}
+                </div>
+
+                <div class="mt-2">
+                    📅 ${v.data} ${v.hora}
+                </div>
+
+                <div class="mt-2 fw-bold text-primary">
+                    € ${v.preco}
                 </div>
 
             </div>
@@ -396,6 +474,19 @@ async function salvarEdicaoViagem() {
 
     viagemEditando = null;
     carregar();
+}
+
+function filtrarViagens() {
+    const termo = document.getElementById("searchViagens").value.toLowerCase();
+
+    const filtradas = viagens.filter(v =>
+        (v.codigo_voo || "").toLowerCase().includes(termo) ||
+        (v.origem || "").toLowerCase().includes(termo) ||
+        (v.destino || "").toLowerCase().includes(termo) ||
+        (v.companhia || "").toLowerCase().includes(termo)
+    );
+
+    renderViagensFiltradas(filtradas);
 }
 
 // ==================== RESERVAS ====================
