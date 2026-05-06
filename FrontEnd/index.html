@@ -1,35 +1,262 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>Dashboard</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    </head>
-    <body>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<title>Sistema de Viagens</title>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="index.html">Gestão de Viagens</a>
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link" href="clientes.html">Clientes</a>
-                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="viagens.html">Viagens</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="reservas.html">Reservas</a>
-                </li>
-            </ul>
-        </div>
-      </div>
-    </nav>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <div class="container">
-        <h1>Placeholder</h1>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A assumenda commodi consectetur culpa cupiditate deleniti deserunt dolorum earum error est et eum fugiat illo illum in iusto libero, magnam maxime molestiae necessitatibus nobis nostrum porro possimus provident quaerat quibusdam rem repudiandae similique unde, velit. Ab alias, corporis, dolor dolorem explicabo nulla omnis optio quod sapiente sit, temporibus totam voluptas! Accusamus aspernatur cum debitis dolorem doloribus, exercitationem laboriosam modi officia quaerat rem repudiandae sequi similique sunt velit veritatis! Aliquid aut deserunt dicta dignissimos doloremque, doloribus enim facilis fugit harum in ipsum laborum modi neque, nihil quo sed similique sunt veniam, voluptatem.</p>
+<style>
+body {
+    background: #f5f7fb;
+}
+
+.card-modern {
+    border: none;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+
+.header {
+    font-weight: 600;
+    font-size: 1.2rem;
+}
+
+.badge-vagas {
+    font-size: 0.8rem;
+}
+
+.sidebar {
+    height: 100vh;
+    background: #111827;
+    color: white;
+    padding: 20px;
+}
+
+.sidebar h4 {
+    color: #9ca3af;
+}
+
+.sidebar button {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.content {
+    padding: 30px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="d-flex">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <h4>Menu</h4>
+        <button class="btn btn-outline-light" onclick="mostrar('clientes')">Clientes</button>
+        <button class="btn btn-outline-light" onclick="mostrar('viagens')">Viagens</button>
+        <button class="btn btn-outline-light" onclick="mostrar('reservas')">Reservas</button>
     </div>
 
-    </body>
+    <!-- CONTENT -->
+    <div class="content flex-fill">
+
+        <!-- CLIENTES -->
+        <div id="clientes">
+            <h3 class="mb-3">Clientes</h3>
+
+            <div class="card-modern p-3 mb-3">
+                <div class="row">
+                    <div class="col"><input id="nome" class="form-control" placeholder="Nome"></div>
+                    <div class="col"><input id="email" class="form-control" placeholder="Email"></div>
+                    <div class="col">
+                        <button class="btn btn-primary w-100" onclick="criarCliente()">Criar</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="clientesLista" class="row"></div>
+        </div>
+
+        <!-- VIAGENS -->
+        <div id="viagens" style="display:none;">
+            <h3 class="mb-3">Viagens</h3>
+
+            <div class="card-modern p-3 mb-3">
+                <div class="row">
+                    <div class="col"><input id="destino" class="form-control" placeholder="Destino"></div>
+                    <div class="col"><input id="horario" class="form-control" placeholder="Data"></div>
+                    <div class="col"><input id="vagas" type="number" class="form-control" placeholder="Vagas"></div>
+                    <div class="col">
+                        <button class="btn btn-success w-100" onclick="criarViagem()">Criar</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="viagensLista" class="row"></div>
+        </div>
+
+        <!-- RESERVAS -->
+        <div id="reservas" style="display:none;">
+            <h3 class="mb-3">Reservas</h3>
+
+            <div class="card-modern p-3 mb-3">
+                <div class="row">
+                    <div class="col">
+                        <select id="cliente" class="form-select"></select>
+                    </div>
+                    <div class="col">
+                        <select id="viagem" class="form-select"></select>
+                    </div>
+                    <div class="col">
+                        <button class="btn btn-warning w-100" onclick="criarReserva()">Reservar</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="reservasLista" class="row"></div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+const API = "http://localhost:5000";
+
+let clientes = [];
+let viagens = [];
+
+function mostrar(secao) {
+    document.getElementById("clientes").style.display = "none";
+    document.getElementById("viagens").style.display = "none";
+    document.getElementById("reservas").style.display = "none";
+    document.getElementById(secao).style.display = "block";
+}
+
+async function carregar() {
+    document.body.style.opacity = 0.6;
+
+    clientes = await (await fetch(`${API}/clientes`)).json();
+    viagens = await (await fetch(`${API}/viagens`)).json();
+    const reservas = await (await fetch(`${API}/reservas`)).json();
+
+    document.body.style.opacity = 1;
+    renderClientes();
+    renderViagens();
+    renderReservas(reservas);
+    atualizarSelects();
+}
+
+function renderClientes() {
+    clientesLista.innerHTML = clientes.map(c => `
+        <div class="col-md-4">
+            <div class="card-modern p-3 mb-3">
+                <div class="header">${c.nome}</div>
+                <div class="text-muted">${c.email}</div>
+            </div>
+        </div>
+    `).join("");
+}
+
+function renderViagens() {
+    viagensLista.innerHTML = viagens.map(v => `
+        <div class="col-md-4">
+            <div class="card-modern p-3 mb-3">
+                <div class="header">${v.destino}</div>
+                <div>${v.horario}</div>
+                <span class="badge bg-${v.vagas > 0 ? "success" : "danger"} badge-vagas">
+                    ${v.vagas} vagas
+                </span>
+            </div>
+        </div>
+    `).join("");
+}
+
+function renderReservas(reservas) {
+    reservasLista.innerHTML = reservas.map(r => {
+        const c = clientes.find(x => x.id === r.cliente_id);
+        const v = viagens.find(x => x.id === r.viagem_id);
+
+        return `
+        <div class="col-md-4">
+            <div class="card-modern p-3 mb-3">
+                <div class="header">${c?.nome}</div>
+                <div>${v?.destino}</div>
+                <div class="mb-2">${r.status}</div>
+                ${r.status !== "cancelada" ?
+                    `<button class="btn btn-danger btn-sm w-100" onclick="cancelar(${r.id})">Cancelar</button>`
+                    : `<span class="text-muted">Cancelada</span>`
+                }
+            </div>
+        </div>
+        `;
+    }).join("");
+}
+
+function atualizarSelects() {
+    cliente.innerHTML = clientes.map(c =>
+        `<option value="${c.id}">${c.nome}</option>`
+    ).join("");
+
+    viagem.innerHTML = viagens.map(v =>
+        `<option value="${v.id}" ${v.vagas === 0 ? "disabled" : ""}>
+            ${v.destino} (${v.vagas} vagas)
+        </option>`
+    ).join("");
+}
+
+async function criarCliente() {
+    await fetch(`${API}/clientes`, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ nome: nome.value, email: email.value })
+    });
+    carregar();
+}
+
+async function criarViagem() {
+    await fetch(`${API}/viagens`, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            destino: destino.value,
+            horario: horario.value,
+            vagas: parseInt(vagas.value)
+        })
+    });
+    carregar();
+}
+
+async function criarReserva() {
+    await fetch(`${API}/reservas`, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            cliente_id: parseInt(cliente.value),
+            viagem_id: parseInt(viagem.value)
+        })
+    });
+    carregar();
+}
+
+async function cancelar(id) {
+    await fetch(`${API}/reservas/${id}`, { method: "DELETE" });
+    carregar();
+}
+
+carregar();
+
+function mostrar(secao) {
+    ["clientes","viagens","reservas"].forEach(id => {
+        document.getElementById(id).style.display = "none";
+    });
+
+    document.getElementById(secao).style.display = "block";
+}
+</script>
+
+</body>
 </html>

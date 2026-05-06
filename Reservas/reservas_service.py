@@ -42,24 +42,37 @@ def criar_reserva():
 def listar_reservas():
     return jsonify(list(reservas.values()))
 
-@app.route('/reservas/<int:id>', methods=['DELETE'])
+@@app.route('/reservas/<int:id>', methods=['DELETE'])
 def cancelar_reserva(id):
-    if id in reservas:
-        reserva = reservas[id]
+    if id not in reservas:
+        return jsonify({"erro": "Reserva não encontrada"}), 404
 
-        if reserva["status"] == "cancelada":
-            return jsonify({"erro": "Reserva já cancelada"}), 400
+    reserva = reservas[id]
 
-        viagem_id = reserva["viagem_id"]
+    if reserva["status"] == "cancelada":
+        return jsonify({"erro": "Reserva já cancelada"}), 400
 
-        # libera vaga na viagem
-        requests.put(f"{VIAGENS_URL}/viagens/{viagem_id}/liberar")
+    viagem_id = reserva["viagem_id"]
 
-        reserva["status"] = "cancelada"
+    res = requests.put(f"{VIAGENS_URL}/viagens/{viagem_id}/liberar")
+    if res.status_code != 200:
+        return jsonify({"erro": "Erro ao liberar vaga"}), 500
 
-        return jsonify(reserva)
+    reserva["status"] = "cancelada"
 
-    return jsonify({"erro": "Reserva não encontrada"}), 404
+    return jsonify(reserva)
+
+@app.route('/reservas/<int:id>', methods=['PUT'])
+def atualizar_reserva(id):
+    if id not in reservas:
+        return jsonify({"erro": "Reserva não encontrada"}), 404
+
+    data = request.json
+    reserva = reservas[id]
+
+    reserva["status"] = data.get("status", reserva["status"])
+
+    return jsonify(reserva)
 
 if __name__ == '__main__':
     app.run(port=5003)

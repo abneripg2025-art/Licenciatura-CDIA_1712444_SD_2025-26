@@ -29,5 +29,27 @@ def obter_cliente(id):
 def listar_clientes():
     return jsonify(list(clientes.values()))
 
+@app.route('/clientes/<int:id>', methods=['PUT'])
+def atualizar_cliente(id):
+    if id not in clientes:
+        return jsonify({"erro": "Cliente não encontrado"}), 404
+
+    data = request.json
+    cliente = clientes[id]
+
+    cliente["nome"] = data.get("nome", cliente["nome"])
+    cliente["email"] = data.get("email", cliente["email"])
+
+    return jsonify(cliente)
+
+
+@app.route('/clientes/<int:id>', methods=['DELETE'])
+def deletar_cliente(id):
+    if id not in clientes:
+        return jsonify({"erro": "Cliente não encontrado"}), 404
+
+    del clientes[id]
+    return jsonify({"msg": "Cliente deletado"})
+
 if __name__ == '__main__':
     app.run(port=5001)
