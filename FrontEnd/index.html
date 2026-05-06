@@ -1,262 +1,283 @@
 <!DOCTYPE html>
 <html lang="pt">
-<head>
-<meta charset="UTF-8">
-<title>Sistema de Viagens</title>
+    <head>
+    <meta charset="UTF-8">
+    <title>Sistema de Viagens</title>
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
-<style>
-body {
-    background: #f5f7fb;
-}
+    <style>
+    body {
+        background: #f5f7fb;
+    }
 
-.card-modern {
+    .card-modern {
+        border: none;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    }
+
+    .header {
+        font-weight: 600;
+        font-size: 1.2rem;
+    }
+
+    .badge-vagas {
+        font-size: 0.8rem;
+    }
+
+    .sidebar {
+        height: 100vh;
+        background: #111827;
+        color: white;
+        padding: 20px;
+    }
+
+    .sidebar h4 {
+        color: #9ca3af;
+    }
+
+    .sidebar button {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .content {
+        padding: 30px;
+    }
+
+    .card-modern {
     border: none;
     border-radius: 16px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-}
+    background: #ffffff;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    transition: all 0.25s ease;
+    }
 
-.header {
-    font-weight: 600;
-    font-size: 1.2rem;
-}
+    .card-modern:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+    }
 
-.badge-vagas {
-    font-size: 0.8rem;
-}
+    .card-modern h5 {
+        font-weight: 600;
+        margin-bottom: 4px;
+    }
 
-.sidebar {
-    height: 100vh;
-    background: #111827;
-    color: white;
-    padding: 20px;
-}
+    .card-modern small {
+        font-size: 0.85rem;
+    }
 
-.sidebar h4 {
-    color: #9ca3af;
-}
+    .icon-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+        input, select {
+            border-radius: 10px !important;
+        }
 
-.sidebar button {
-    width: 100%;
-    margin-bottom: 10px;
-}
+        button {
+            border-radius: 10px !important;
+        }
 
-.content {
-    padding: 30px;
-}
+        .card-modern {
+            backdrop-filter: blur(6px);
+        }
 
-</style>
-</head>
+    </style>
+    </head>
 
-<body>
+    <body>
 
-<div class="d-flex">
+        <div class="d-flex">
 
-    <!-- SIDEBAR -->
-    <div class="sidebar">
-        <h4>Menu</h4>
-        <button class="btn btn-outline-light" onclick="mostrar('clientes')">Clientes</button>
-        <button class="btn btn-outline-light" onclick="mostrar('viagens')">Viagens</button>
-        <button class="btn btn-outline-light" onclick="mostrar('reservas')">Reservas</button>
-    </div>
+            <!-- SIDEBAR -->
+            <div class="sidebar">
+                <h4>Menu</h4>
+                <button class="btn btn-outline-light" onclick="mostrar('clientes')">Clientes</button>
+                <button class="btn btn-outline-light" onclick="mostrar('viagens')">Viagens</button>
+                <button class="btn btn-outline-light" onclick="mostrar('reservas')">Reservas</button>
+            </div>
 
-    <!-- CONTENT -->
-    <div class="content flex-fill">
+            <!-- CONTENT -->
+            <div class="content flex-fill">
 
-        <!-- CLIENTES -->
-        <div id="clientes">
-            <h3 class="mb-3">Clientes</h3>
+                <!-- CLIENTES -->
+                <div id="clientes">
+                    <h3 class="mb-3">Clientes</h3>
 
-            <div class="card-modern p-3 mb-3">
-                <div class="row">
-                    <div class="col"><input id="nome" class="form-control" placeholder="Nome"></div>
-                    <div class="col"><input id="email" class="form-control" placeholder="Email"></div>
-                    <div class="col">
-                        <button class="btn btn-primary w-100" onclick="criarCliente()">Criar</button>
+                    <div class="card-modern p-3 mb-3">
+                        <div class="row">
+                            <div class="col"><input id="nome" class="form-control" placeholder="Nome"></div>
+                            <div class="col"><input id="email" class="form-control" placeholder="Email"></div>
+                            <div class="col">
+                                <button class="btn btn-primary w-100" onclick="criarCliente()">Criar</button>
+                            </div>
+                        </div>
                     </div>
+
+                    <div id="clientesLista" class="row"></div>
                 </div>
-            </div>
 
-            <div id="clientesLista" class="row"></div>
-        </div>
+                <!-- VIAGENS -->
+                <div id="viagens" style="display:none;">
+                    <h3 class="mb-3">Viagens</h3>
 
-        <!-- VIAGENS -->
-        <div id="viagens" style="display:none;">
-            <h3 class="mb-3">Viagens</h3>
+                    <div class="card-modern p-3 mb-3">
 
-            <div class="card-modern p-3 mb-3">
-                <div class="row">
-                    <div class="col"><input id="destino" class="form-control" placeholder="Destino"></div>
-                    <div class="col"><input id="horario" class="form-control" placeholder="Data"></div>
-                    <div class="col"><input id="vagas" type="number" class="form-control" placeholder="Vagas"></div>
-                    <div class="col">
-                        <button class="btn btn-success w-100" onclick="criarViagem()">Criar</button>
+                        <div class="row g-2">
+
+                            <div class="col-md-2">
+                                <input id="codigo_voo" class="form-control" placeholder="Código (TP123)">
+                            </div>
+
+                            <div class="col-md-2">
+                                <input id="companhia" class="form-control" placeholder="Companhia">
+                            </div>
+
+                            <div class="col-md-2">
+                                <input id="origem" class="form-control" placeholder="Origem">
+                            </div>
+
+                            <div class="col-md-2">
+                                <input id="destino" class="form-control" placeholder="Destino">
+                            </div>
+
+                            <div class="col-md-2">
+                                <input id="data" type="date" class="form-control">
+                            </div>
+
+                            <div class="col-md-2">
+                                <input id="hora" type="time" class="form-control">
+                            </div>
+
+                            <div class="col-md-2">
+                                <input id="terminal" class="form-control" placeholder="Terminal">
+                            </div>
+
+                            <div class="col-md-2">
+                                <input id="portao" class="form-control" placeholder="Portão">
+                            </div>
+
+                            <div class="col-md-2">
+                                <input id="preco" type="number" class="form-control" placeholder="Preço (€)">
+                            </div>
+
+                            <div class="col-md-2">
+                                <input id="vagas" type="number" class="form-control" placeholder="Vagas">
+                            </div>
+
+                            <div class="col-md-2">
+                                <button class="btn btn-success w-100" onclick="criarViagem()">
+                                    <i class="bi bi-plus-circle"></i> Criar
+                                </button>
+                            </div>
+
+                        </div>
+
                     </div>
+
+                    <div id="viagensLista" class="row"></div>
                 </div>
-            </div>
 
-            <div id="viagensLista" class="row"></div>
-        </div>
+                <!-- RESERVAS -->
+                <div id="reservas" style="display:none;">
+                    <h3 class="mb-3">Reservas</h3>
 
-        <!-- RESERVAS -->
-        <div id="reservas" style="display:none;">
-            <h3 class="mb-3">Reservas</h3>
+                    <div class="card-modern p-3 mb-3">
+                        <div class="row">
+                            <div class="col">
+                                <select id="cliente" class="form-select"></select>
+                            </div>
+                            <div class="col">
+                                <select id="viagem" class="form-select"></select>
+                            </div>
+                            <div class="col">
+                                <button class="btn btn-warning w-100" onclick="criarReserva()">Reservar</button>
+                            </div>
+                        </div>
+                    </div>
 
-            <div class="card-modern p-3 mb-3">
-                <div class="row">
-                    <div class="col">
-                        <select id="cliente" class="form-select"></select>
-                    </div>
-                    <div class="col">
-                        <select id="viagem" class="form-select"></select>
-                    </div>
-                    <div class="col">
-                        <button class="btn btn-warning w-100" onclick="criarReserva()">Reservar</button>
-                    </div>
+                    <div id="reservasLista" class="row"></div>
                 </div>
-            </div>
 
-            <div id="reservasLista" class="row"></div>
-        </div>
-
-    </div>
-</div>
-
-<script>
-const API = "http://localhost:5000";
-
-let clientes = [];
-let viagens = [];
-
-function mostrar(secao) {
-    document.getElementById("clientes").style.display = "none";
-    document.getElementById("viagens").style.display = "none";
-    document.getElementById("reservas").style.display = "none";
-    document.getElementById(secao).style.display = "block";
-}
-
-async function carregar() {
-    document.body.style.opacity = 0.6;
-
-    clientes = await (await fetch(`${API}/clientes`)).json();
-    viagens = await (await fetch(`${API}/viagens`)).json();
-    const reservas = await (await fetch(`${API}/reservas`)).json();
-
-    document.body.style.opacity = 1;
-    renderClientes();
-    renderViagens();
-    renderReservas(reservas);
-    atualizarSelects();
-}
-
-function renderClientes() {
-    clientesLista.innerHTML = clientes.map(c => `
-        <div class="col-md-4">
-            <div class="card-modern p-3 mb-3">
-                <div class="header">${c.nome}</div>
-                <div class="text-muted">${c.email}</div>
             </div>
         </div>
-    `).join("");
-}
 
-function renderViagens() {
-    viagensLista.innerHTML = viagens.map(v => `
-        <div class="col-md-4">
-            <div class="card-modern p-3 mb-3">
-                <div class="header">${v.destino}</div>
-                <div>${v.horario}</div>
-                <span class="badge bg-${v.vagas > 0 ? "success" : "danger"} badge-vagas">
-                    ${v.vagas} vagas
-                </span>
+    <script src="app.js"></script>
+        <div class="modal fade" id="modalViagem" tabindex="-1">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+              <div class="modal-header">
+                <h5 class="modal-title">
+                  <i class="bi bi-airplane"></i> Editar Viagem
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+
+              <div class="modal-body">
+
+                <div class="row g-2">
+
+                  <div class="col-md-3">
+                    <input id="m_codigo_voo" class="form-control" placeholder="Código">
+                  </div>
+
+                  <div class="col-md-3">
+                    <input id="m_companhia" class="form-control" placeholder="Companhia">
+                  </div>
+
+                  <div class="col-md-3">
+                    <input id="m_origem" class="form-control" placeholder="Origem">
+                  </div>
+
+                  <div class="col-md-3">
+                    <input id="m_destino" class="form-control" placeholder="Destino">
+                  </div>
+
+                  <div class="col-md-3">
+                    <input id="m_data" type="date" class="form-control">
+                  </div>
+
+                  <div class="col-md-3">
+                    <input id="m_hora" type="time" class="form-control">
+                  </div>
+
+                  <div class="col-md-2">
+                    <input id="m_terminal" class="form-control" placeholder="Terminal">
+                  </div>
+
+                  <div class="col-md-2">
+                    <input id="m_portao" class="form-control" placeholder="Portão">
+                  </div>
+
+                  <div class="col-md-2">
+                    <input id="m_preco" type="number" class="form-control" placeholder="Preço">
+                  </div>
+
+                  <div class="col-md-2">
+                    <input id="m_vagas" type="number" class="form-control" placeholder="Vagas">
+                  </div>
+
+                </div>
+
+              </div>
+
+              <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button class="btn btn-success" onclick="salvarEdicaoViagem()"">
+                  <i class="bi bi-check"></i> Salvar
+                </button>
+              </div>
+
             </div>
+          </div>
         </div>
-    `).join("");
-}
-
-function renderReservas(reservas) {
-    reservasLista.innerHTML = reservas.map(r => {
-        const c = clientes.find(x => x.id === r.cliente_id);
-        const v = viagens.find(x => x.id === r.viagem_id);
-
-        return `
-        <div class="col-md-4">
-            <div class="card-modern p-3 mb-3">
-                <div class="header">${c?.nome}</div>
-                <div>${v?.destino}</div>
-                <div class="mb-2">${r.status}</div>
-                ${r.status !== "cancelada" ?
-                    `<button class="btn btn-danger btn-sm w-100" onclick="cancelar(${r.id})">Cancelar</button>`
-                    : `<span class="text-muted">Cancelada</span>`
-                }
-            </div>
-        </div>
-        `;
-    }).join("");
-}
-
-function atualizarSelects() {
-    cliente.innerHTML = clientes.map(c =>
-        `<option value="${c.id}">${c.nome}</option>`
-    ).join("");
-
-    viagem.innerHTML = viagens.map(v =>
-        `<option value="${v.id}" ${v.vagas === 0 ? "disabled" : ""}>
-            ${v.destino} (${v.vagas} vagas)
-        </option>`
-    ).join("");
-}
-
-async function criarCliente() {
-    await fetch(`${API}/clientes`, {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({ nome: nome.value, email: email.value })
-    });
-    carregar();
-}
-
-async function criarViagem() {
-    await fetch(`${API}/viagens`, {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({
-            destino: destino.value,
-            horario: horario.value,
-            vagas: parseInt(vagas.value)
-        })
-    });
-    carregar();
-}
-
-async function criarReserva() {
-    await fetch(`${API}/reservas`, {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({
-            cliente_id: parseInt(cliente.value),
-            viagem_id: parseInt(viagem.value)
-        })
-    });
-    carregar();
-}
-
-async function cancelar(id) {
-    await fetch(`${API}/reservas/${id}`, { method: "DELETE" });
-    carregar();
-}
-
-carregar();
-
-function mostrar(secao) {
-    ["clientes","viagens","reservas"].forEach(id => {
-        document.getElementById(id).style.display = "none";
-    });
-
-    document.getElementById(secao).style.display = "block";
-}
-</script>
-
-</body>
+    </body>
 </html>

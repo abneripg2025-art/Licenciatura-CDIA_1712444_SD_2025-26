@@ -42,7 +42,7 @@ def criar_reserva():
 def listar_reservas():
     return jsonify(list(reservas.values()))
 
-@@app.route('/reservas/<int:id>', methods=['DELETE'])
+@app.route('/reservas/<int:id>', methods=['DELETE'])
 def cancelar_reserva(id):
     if id not in reservas:
         return jsonify({"erro": "Reserva não encontrada"}), 404
