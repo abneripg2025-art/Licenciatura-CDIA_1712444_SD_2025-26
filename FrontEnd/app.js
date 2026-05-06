@@ -141,13 +141,8 @@ function renderViagens() {
                         </div>
 
                         <!-- Terminal e Portão -->
-                        <div class="mb-2">
-                            <span class="badge bg-light text-dark me-1">
-                                <i class="bi bi-building"></i> ${v.terminal || "-"}
-                            </span>
-                            <span class="badge bg-light text-dark">
-                                <i class="bi bi-door-open"></i> ${v.portao || "-"}
-                            </span>
+                         <div class="text-muted mb-1">
+                            <i class="bi bi-hash"></i> Terminal ${v.terminal || "-"} • Portão ${v.portao || ""}
                         </div>
 
                         <!-- Status -->
@@ -259,6 +254,7 @@ function abrirModalEditar(v) {
     const modal = new bootstrap.Modal(document.getElementById('modalViagem'));
     modal.show();
 }
+
 async function salvarEdicaoViagem() {
 
     if (!viagemEditando) return;
@@ -303,7 +299,7 @@ function renderReservas() {
                 </div>
 
                 <div class="text-muted mb-2">
-                    <i class="bi bi-airplane"></i> ${v?.destino}
+                    <i class="bi bi-airplane"></i> ${v?.codigo_voo} - ${v?.destino}
                 </div>
 
                 <span class="badge bg-${r.status === "cancelada" ? "secondary" : "primary"}">
@@ -350,7 +346,7 @@ function atualizarSelects() {
 
     viagem.innerHTML = viagens.map(v =>
         `<option value="${v.id}" ${v.vagas === 0 ? "disabled" : ""}>
-            ${v.destino} (${v.vagas} vagas)
+            ${v?.codigo_voo} - ${v?.destino} (${v.vagas} vagas)
         </option>`
     ).join("");
 }

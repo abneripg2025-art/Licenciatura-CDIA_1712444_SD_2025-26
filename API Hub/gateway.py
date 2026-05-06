@@ -78,9 +78,6 @@ def proxy_viagens():
         json=request.get_json(silent=True)
     )
 
-    print("STATUS:", res.status_code)
-    print("RAW:", res.text)
-
     return jsonify({"debug": res.text}), 200
 
 
