@@ -109,22 +109,46 @@
             <div class="content flex-fill">
 
                 <!-- CLIENTES -->
-                <div id="clientes">
-                    <h3 class="mb-3">Clientes</h3>
+            <div id="clientes">
+                <h3 class="mb-3">Clientes</h3>
 
-                    <div class="card-modern p-3 mb-3">
-                        <div class="row">
-                            <div class="col"><input id="nome" class="form-control" placeholder="Nome"></div>
-                            <div class="col"><input id="email" class="form-control" placeholder="Email"></div>
-                            <div class="col">
-                                <button class="btn btn-primary w-100" onclick="criarCliente()">Criar</button>
-                            </div>
+                <div class="card-modern p-3 mb-3">
+                    <div class="row g-2">
+
+                        <div class="col-md-3">
+                            <input id="nome" class="form-control" placeholder="Nome">
                         </div>
+
+                        <div class="col-md-3">
+                            <input id="email" class="form-control" placeholder="Email">
+                        </div>
+
+                        <div class="col-md-2">
+                            <input id="telefone" class="form-control" placeholder="Telefone">
+                        </div>
+
+                        <div class="col-md-2">
+                            <input id="nif" class="form-control" placeholder="NIF">
+                        </div>
+
+                        <div class="col-md-2">
+                            <input id="passaporte" class="form-control" placeholder="Passaporte">
+                        </div>
+
                     </div>
 
-                    <div id="clientesLista" class="row"></div>
+                    <div class="row mt-2">
+                        <div class="col-md-3">
+                            <button class="btn btn-primary w-100" onclick="criarCliente()">
+                                Criar Cliente
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
+    <!-- LISTA DE CLIENTES -->
+    <div id="clientesLista" class="row"></div>
+</div>
                 <!-- VIAGENS -->
                 <div id="viagens" style="display:none;">
                     <h3 class="mb-3">Viagens</h3>
@@ -211,6 +235,7 @@
         </div>
 
         <script src="app.js"></script>
+        # Modal de Viagem
         <div class="modal fade" id="modalViagem" tabindex="-1">
           <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -275,6 +300,57 @@
                 <button class="btn btn-success" onclick="salvarEdicaoViagem()">
                   <i class="bi bi-check"></i> Salvar
                 </button>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        # Modal de Clientes
+        <div class="modal fade" id="modalEditarCliente" tabindex="-1">
+          <div class="modal-dialog">
+            <div class="modal-content">
+
+              <div class="modal-header">
+                <h5 class="modal-title">Editar Cliente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+
+              <div class="modal-body">
+
+                <input type="hidden" id="edit-id">
+
+                <div class="mb-2">
+                  <input id="edit-nome" class="form-control" placeholder="Nome">
+                </div>
+
+                <div class="mb-2">
+                  <input id="edit-email" class="form-control" placeholder="Email">
+                </div>
+
+                <div class="mb-2">
+                  <input id="edit-telefone" class="form-control" placeholder="Telefone">
+                </div>
+
+                <div class="mb-2">
+                  <input id="edit-nif" class="form-control" placeholder="NIF">
+                </div>
+
+                <div class="mb-2">
+                  <input id="edit-passaporte" class="form-control" placeholder="Passaporte">
+                </div>
+
+                <div class="mb-2">
+                  <select id="edit-estado" class="form-control">
+                    <option value="ativo">Ativo</option>
+                    <option value="inativo">Inativo</option>
+                  </select>
+                </div>
+
+              </div>
+
+              <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button class="btn btn-primary" onclick="salvarEdicaoCliente()">Guardar</button>
               </div>
 
             </div>

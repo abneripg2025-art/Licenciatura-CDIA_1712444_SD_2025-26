@@ -74,5 +74,26 @@ def atualizar_reserva(id):
 
     return jsonify(reserva)
 
+@app.route('/reservas/cliente/<int:cliente_id>/completo', methods=['GET'])
+def historico_cliente_completo(cliente_id):
+
+    resultado = []
+
+    for r in reservas.values():
+        if r["cliente_id"] == cliente_id:
+
+            viagem = requests.get(
+                f"{VIAGENS_URL}/viagens/{r['viagem_id']}"
+            )
+
+            reserva_completa = {
+                **r,
+                "viagem": viagem.json() if viagem.status_code == 200 else None
+            }
+
+            resultado.append(reserva_completa)
+
+    return jsonify(resultado)
+
 if __name__ == '__main__':
     app.run(port=5003)

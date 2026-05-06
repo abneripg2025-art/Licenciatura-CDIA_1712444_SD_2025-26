@@ -45,28 +45,54 @@ function renderClientes() {
         <div class="col-md-4">
             <div class="card-modern p-3 mb-3">
 
-                <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex justify-content-between align-items-start">
 
-                    <div class="d-flex align-items-center gap-3">
+                    <div class="d-flex align-items-start gap-3">
+
                         <div class="bg-primary text-white icon-btn">
                             <i class="bi bi-person-fill"></i>
                         </div>
 
                         <div>
                             <h5>${c.nome}</h5>
-                            <small class="text-muted">
+
+                            <small class="text-muted d-block">
                                 <i class="bi bi-envelope"></i> ${c.email}
                             </small>
+
+                            <small class="text-muted d-block">
+                                <i class="bi bi-telephone"></i> ${c.telefone || "—"}
+                            </small>
+
+                            <small class="text-muted d-block">
+                                <i class="bi bi-credit-card"></i> NIF: ${c.nif || "—"}
+                            </small>
+
+                            <small class="text-muted d-block">
+                                <i class="bi bi-passport"></i> ${c.passaporte || "—"}
+                            </small>
+
+                            <span class="badge bg-${c.estado === 'ativo' ? 'success' : 'secondary'} mt-2">
+                                ${c.estado || 'ativo'}
+                            </span>
                         </div>
+
                     </div>
 
-                    <div class="d-flex gap-2">
+                    <div class="d-flex flex-column gap-2">
+
+                        <button class="btn btn-light icon-btn" onclick="verHistorico(${c.id})">
+                            <i class="bi bi-clock-history"></i>
+                        </button>
+
                         <button class="btn btn-light icon-btn" onclick="editarCliente(${c.id})">
                             <i class="bi bi-pencil"></i>
                         </button>
+
                         <button class="btn btn-light icon-btn" onclick="deletarCliente(${c.id})">
                             <i class="bi bi-trash"></i>
                         </button>
+
                     </div>
 
                 </div>
@@ -80,26 +106,72 @@ async function criarCliente() {
     await fetch(`${API}/clientes`, {
         method: "POST",
         headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({ nome: nome.value, email: email.value })
+        body: JSON.stringify({
+            nome: nome.value,
+            email: email.value,
+            telefone: telefone.value,
+            nif: nif.value,
+            passaporte: passaporte.value
+        })
     });
+
     carregar();
 }
 
-async function editarCliente(id) {
+function editarCliente(id) {
     const c = clientes.find(x => x.id === id);
 
-    const nomeNovo = prompt("Nome:", c.nome);
-    const emailNovo = prompt("Email:", c.email);
+    document.getElementById("edit-id").value = c.id;
+    document.getElementById("edit-nome").value = c.nome;
+    document.getElementById("edit-email").value = c.email;
+    document.getElementById("edit-telefone").value = c.telefone || "";
+    document.getElementById("edit-nif").value = c.nif || "";
+    document.getElementById("edit-passaporte").value = c.passaporte || "";
+    document.getElementById("edit-estado").value = c.estado || "ativo";
 
-    if (!nomeNovo || !emailNovo) return;
+    const modal = new bootstrap.Modal(document.getElementById("modalEditarCliente"));
+    modal.show();
+}
+
+async function salvarEdicaoCliente() {
+    const id = document.getElementById("edit-id").value;
+
+    const payload = {
+        nome: document.getElementById("edit-nome").value,
+        email: document.getElementById("edit-email").value,
+        telefone: document.getElementById("edit-telefone").value,
+        nif: document.getElementById("edit-nif").value,
+        passaporte: document.getElementById("edit-passaporte").value,
+        estado: document.getElementById("edit-estado").value
+    };
 
     await fetch(`${API}/clientes/${id}`, {
         method: "PUT",
         headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({ nome: nomeNovo, email: emailNovo })
+        body: JSON.stringify(payload)
     });
 
+    // fechar modal
+    const modalEl = document.getElementById("modalEditarCliente");
+    const modal = bootstrap.Modal.getInstance(modalEl);
+    modal.hide();
+
     carregar();
+}
+
+async function verHistorico(clienteId) {
+    const res = await fetch(`${API}/clientes/${clienteId}/historico`);
+    const historico = await res.json();
+
+    console.log("HISTÓRICO:", historico);
+
+    alert(
+        historico.length === 0
+        ? "Sem reservas"
+        : historico.map(r =>
+            `Reserva #${r.id} | Viagem ${r.viagem_id} | ${r.status}`
+          ).join("\n")
+    );
 }
 
 async function deletarCliente(id) {

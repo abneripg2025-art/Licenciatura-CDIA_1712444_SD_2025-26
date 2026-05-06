@@ -67,6 +67,14 @@ def proxy_delete_cliente(id):
     data, status = safe_request("DELETE", f"{CLIENTES_URL}/clientes/{id}")
     return jsonify(data), status
 
+@app.route('/clientes/<int:id>/historico', methods=['GET'])
+def historico_cliente(id):
+    data, status = safe_request(
+        "GET",
+        f"{RESERVAS_URL}/reservas/cliente/{id}"
+    )
+    return jsonify(data), status
+
 
 # =========================
 # VIAGENS
