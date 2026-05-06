@@ -4,6 +4,10 @@ let clientes = [];
 let viagens = [];
 let reservas = [];
 
+window.onload = () => {
+    mostrar("clientes", document.querySelector(".sidebar button"));
+};
+
 function getStatusColor(status) {
     switch (status) {
         case "Agendado": return "primary";
@@ -15,16 +19,25 @@ function getStatusColor(status) {
     }
 }
 
-function mostrar(secao) {
-    const secoes = ["clientes", "viagens", "reservas"];
+function mostrar(secao, btn) {
 
-    secoes.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.style.display = "none";
+    // esconder todas as secções
+    document.getElementById("clientes").style.display = "none";
+    document.getElementById("viagens").style.display = "none";
+    document.getElementById("reservas").style.display = "none";
+
+    // mostrar selecionada
+    document.getElementById(secao).style.display = "block";
+
+    // remover active de todos os botões
+    document.querySelectorAll(".sidebar button").forEach(b => {
+        b.classList.remove("active");
     });
 
-    const ativa = document.getElementById(secao);
-    if (ativa) ativa.style.display = "block";
+    // adicionar active ao clicado
+    if (btn) {
+        btn.classList.add("active");
+    }
 }
 
 // ==================== LOAD ====================
@@ -160,18 +173,47 @@ async function salvarEdicaoCliente() {
 }
 
 async function verHistorico(clienteId) {
+
     const res = await fetch(`${API}/clientes/${clienteId}/historico`);
     const historico = await res.json();
 
     console.log("HISTÓRICO:", historico);
 
-    alert(
-        historico.length === 0
-        ? "Sem reservas"
-        : historico.map(r =>
-            `Reserva #${r.id} | Viagem ${r.viagem_id} | ${r.status}`
-          ).join("\n")
-    );
+    const container = document.getElementById("historicoConteudo");
+
+    // 🔥 PROTEÇÃO IMPORTANTE
+    if (!Array.isArray(historico)) {
+        container.innerHTML = `
+            <div class="text-danger text-center">
+                Erro ao carregar histórico
+            </div>
+        `;
+        return;
+    }
+
+    if (historico.length === 0) {
+        container.innerHTML = `
+            <div class="text-center text-muted">
+                Sem reservas encontradas
+            </div>
+        `;
+    } else {
+        container.innerHTML = `
+            <div class="list-group">
+                ${historico.map(r => `
+                    <div class="list-group-item">
+                        <strong>Reserva #${r.id}</strong><br>
+                        Viagem: ${r.viagem_id}<br>
+                        Status: ${r.status}
+                    </div>
+                `).join("")}
+            </div>
+        `;
+    }
+
+    new bootstrap.Modal(
+        document.getElementById("modalHistoricoCliente")
+    ).show();
 }
 
 async function deletarCliente(id) {
@@ -359,32 +401,82 @@ async function salvarEdicaoViagem() {
 // ==================== RESERVAS ====================
 function renderReservas() {
     reservasLista.innerHTML = reservas.map(r => {
+
         const c = clientes.find(x => x.id === r.cliente_id);
         const v = viagens.find(x => x.id === r.viagem_id);
 
         return `
         <div class="col-md-4">
-            <div class="card-modern p-3 mb-3">
+            <div class="card-modern p-3 mb-3 h-100">
 
+                <!-- CLIENTE -->
+                <div class="d-flex align-items-center gap-2 mb-2">
+                    <i class="bi bi-person-circle text-primary"></i>
+                    <strong>${c?.nome || "Cliente desconhecido"}</strong>
+                </div>
+
+                <div class="text-muted small mb-2">
+                    ${c?.email || ""}
+                </div>
+
+                <hr class="my-2">
+
+                <!-- VIAGEM -->
                 <div class="mb-2">
-                    <i class="bi bi-person"></i> <strong>${c?.nome}</strong>
+
+                    <div class="d-flex align-items-center gap-2 mb-1">
+                        <i class="bi bi-airplane"></i>
+                        <strong>${v?.codigo_voo || "-"}</strong>
+                    </div>
+
+                    <div class="text-muted small">
+                        ✈️ ${v?.origem || "?"} → ${v?.destino || "?"}
+                    </div>
+
+                    <div class="text-muted small">
+                        📅 ${v?.data || "-"} às ${v?.hora || "-"}
+                    </div>
+
+                    <div class="text-muted small">
+                        🏢 ${v?.companhia || ""}
+                    </div>
+
                 </div>
 
-                <div class="text-muted mb-2">
-                    <i class="bi bi-airplane"></i> ${v?.codigo_voo} - ${v?.destino}
+                <hr class="my-2">
+
+                <!-- STATUS -->
+                <div class="d-flex justify-content-between align-items-center">
+
+                    <span class="badge bg-${
+                        r.status === "cancelada"
+                            ? "secondary"
+                            : r.status === "confirmada"
+                                ? "success"
+                                : "primary"
+                    }">
+                        ${r.status}
+                    </span>
+
                 </div>
 
-                <span class="badge bg-${r.status === "cancelada" ? "secondary" : "primary"}">
-                    ${r.status}
-                </span>
-
+                <!-- AÇÕES -->
                 <div class="mt-3">
+
                     ${r.status !== "cancelada"
-                        ? `<button class="btn btn-danger btn-sm w-100" onclick="cancelarReserva(${r.id})">
-                                <i class="bi bi-x-circle"></i> Cancelar
-                           </button>`
-                        : `<small class="text-muted">Reserva cancelada</small>`
+                        ? `
+                        <button class="btn btn-danger btn-sm w-100"
+                            onclick="cancelarReserva(${r.id})">
+                            <i class="bi bi-x-circle"></i> Cancelar reserva
+                        </button>
+                        `
+                        : `
+                        <div class="text-center text-muted small">
+                            Reserva cancelada
+                        </div>
+                        `
                     }
+
                 </div>
 
             </div>

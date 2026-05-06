@@ -1,0 +1,110 @@
+
+    body {
+        background: #f5f7fb;
+    }
+
+    .card-modern {
+        border: none;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    }
+
+    .header {
+        font-weight: 600;
+        font-size: 1.2rem;
+    }
+
+    .badge-vagas {
+        font-size: 0.8rem;
+    }
+
+    .sidebar {
+        height: 100vh;
+        background: #111827;
+        color: white;
+        padding: 20px;
+    }
+
+    .sidebar h4 {
+        color: #9ca3af;
+    }
+
+    .sidebar button {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .content {
+        padding: 30px;
+    }
+
+    .card-modern {
+    border: none;
+    border-radius: 16px;
+    background: #ffffff;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    transition: all 0.25s ease;
+    }
+
+    .card-modern:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+    }
+
+    .card-modern h5 {
+        font-weight: 600;
+        margin-bottom: 4px;
+    }
+
+    .card-modern small {
+        font-size: 0.85rem;
+    }
+
+    .icon-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+        input, select {
+            border-radius: 10px !important;
+        }
+
+        button {
+            border-radius: 10px !important;
+        }
+
+        .card-modern {
+            backdrop-filter: blur(6px);
+        }
+        .sidebar {
+            width: 220px;
+            min-width: 220px;
+            height: 100vh;
+            background: #111827;
+            color: white;
+            padding: 20px;
+            position: sticky;
+            top: 0;
+        }
+
+        .content {
+            flex: 1;
+            min-width: 0;
+            padding: 30px;
+        }
+        .row.g-2 {
+            flex-wrap: wrap;
+        }
+        .sidebar button.active {
+            background: #2563eb;
+            border-color: #2563eb;
+            color: white !important;
+            font-weight: 600;
+        }
+
+        .sidebar button {
+            transition: all 0.2s ease;
+        }

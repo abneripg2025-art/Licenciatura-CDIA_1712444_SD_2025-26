@@ -89,20 +89,49 @@
         .card-modern {
             backdrop-filter: blur(6px);
         }
+        .sidebar {
+            width: 220px;
+            min-width: 220px;
+            height: 100vh;
+            background: #111827;
+            color: white;
+            padding: 20px;
+            position: sticky;
+            top: 0;
+        }
+
+        .content {
+            flex: 1;
+            min-width: 0;
+            padding: 30px;
+        }
+        .row.g-2 {
+            flex-wrap: wrap;
+        }
+        .sidebar button.active {
+            background: #2563eb;
+            border-color: #2563eb;
+            color: white !important;
+            font-weight: 600;
+        }
+
+        .sidebar button {
+            transition: all 0.2s ease;
+        }
 
     </style>
     </head>
 
     <body>
 
-        <div class="d-flex">
+        <div class="d-flex min-vh-100">
 
             <!-- SIDEBAR -->
             <div class="sidebar">
                 <h4>Menu</h4>
-                <button class="btn btn-outline-light" onclick="mostrar('clientes')">Clientes</button>
-                <button class="btn btn-outline-light" onclick="mostrar('viagens')">Viagens</button>
-                <button class="btn btn-outline-light" onclick="mostrar('reservas')">Reservas</button>
+                <button class="btn btn-outline-light" onclick="mostrar('clientes', this)">Clientes</button>
+                <button class="btn btn-outline-light" onclick="mostrar('viagens', this)">Viagens</button>
+                <button class="btn btn-outline-light" onclick="mostrar('reservas', this)">Reservas</button>
             </div>
 
             <!-- CONTENT -->
@@ -235,7 +264,7 @@
         </div>
 
         <script src="app.js"></script>
-        # Modal de Viagem
+        <!-- Modal de Viagem -->
         <div class="modal fade" id="modalViagem" tabindex="-1">
           <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -305,7 +334,7 @@
             </div>
           </div>
         </div>
-        # Modal de Clientes
+        <!-- Modal de Clientes -->
         <div class="modal fade" id="modalEditarCliente" tabindex="-1">
           <div class="modal-dialog">
             <div class="modal-content">
@@ -351,6 +380,25 @@
               <div class="modal-footer">
                 <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                 <button class="btn btn-primary" onclick="salvarEdicaoCliente()">Guardar</button>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <!-- Modal de Histórico -->
+        <div class="modal fade" id="modalHistoricoCliente" tabindex="-1">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+              <div class="modal-header">
+                <h5 class="modal-title">Histórico de Reservas</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+
+              <div class="modal-body">
+
+                <div id="historicoConteudo"></div>
+
               </div>
 
             </div>

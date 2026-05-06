@@ -67,13 +67,33 @@ def proxy_delete_cliente(id):
     data, status = safe_request("DELETE", f"{CLIENTES_URL}/clientes/{id}")
     return jsonify(data), status
 
+
 @app.route('/clientes/<int:id>/historico', methods=['GET'])
 def historico_cliente(id):
-    data, status = safe_request(
-        "GET",
-        f"{RESERVAS_URL}/reservas/cliente/{id}"
-    )
-    return jsonify(data), status
+
+    reservas_res = requests.get(f"{RESERVAS_URL}/reservas")
+    viagens_res = requests.get(f"{VIAGENS_URL}/viagens")
+
+    if reservas_res.status_code != 200:
+        return jsonify([])
+
+    reservas = reservas_res.json()
+    viagens = viagens_res.json() if viagens_res.status_code == 200 else []
+
+    historico = []
+
+    for r in reservas:
+        if r["cliente_id"] == id:
+
+            viagem = next((v for v in viagens if v["id"] == r["viagem_id"]), None)
+
+            historico.append({
+                "id": r["id"],
+                "status": r["status"],
+                "viagem": viagem
+            })
+
+    return jsonify(historico)
 
 
 # =========================
