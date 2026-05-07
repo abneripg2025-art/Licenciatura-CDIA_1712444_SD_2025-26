@@ -1,0 +1,13 @@
+Ordem de Execução:
+
+1. clientes/clientes_service.py
+2. viagens/viagens_service.py
+3. reservas/reservas_service.py
+4. API Hub/gateway.py
+
+
+Executar o Front End:
+
+1. Abrir a pasta 'FrontEnd' no console
+2. Executar o comando: Python -m http.server 5500
+3. Abrir a URL: localhost:5500
