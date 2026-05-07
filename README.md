@@ -38,21 +38,6 @@ O trabalho consiste no desenvolvimento de um sistema baseado em microserviços p
 
 Esses três serviços devem estar conectados por um API Hub baseado em REST API, e disponibilizados para uso em uma interface web.
 
-## Figura 1
-
-### Arquitetura (Protótipo)
-
-> Inserir imagem da arquitetura (Protótipo)
-
----
-
-## Figura 2
-
-### Arquitetura (V2)
-
-> Inserir imagem da arquitetura (V2)
-
----
 
 # 2. Implementação do Trabalho
 
@@ -103,22 +88,6 @@ A aba de Clientes possui as funções para:
 
 * **Conferir Histórico:** Clicando no ícone de “relógio” de um dos cards de cliente, o dashboard abre um modal que exibe as todas as reservas feitas por esse cliente;
 
-### Figura 3
-
-#### Dashboard (Aba de Clientes Vazia)
-
-> Inserir imagem da aba de clientes vazia
-
----
-
-### Figura 4
-
-#### Dashboard (Aba de Clientes com dados)
-
-> Inserir imagem da aba de clientes com dados
-
----
-
 ## Aba de Viagens
 
 A aba de Viagens possui as funções para:
@@ -133,22 +102,6 @@ A aba de Viagens possui as funções para:
 
 * **Deletar viagem:** Clicando no ícone de “Lata de Lixo” em um dos cards de viagem, permite apagar uma viagem já criada da API;
 
-### Figura 4
-
-#### Dashboard (Aba de Viagens Vazia)
-
-> Inserir imagem da aba de viagens vazia
-
----
-
-### Figura 5
-
-#### Dashboard (Aba de Viagens com dados)
-
-> Inserir imagem da aba de viagens com dados
-
----
-
 ## Aba de Reservas
 
 A aba de Reservas possui as funções para:
@@ -158,22 +111,6 @@ A aba de Reservas possui as funções para:
 * **Exibir reservas:** Exibe todas as reservas presentes na API através de cards no dashboard;
 
 * **Cancelar:** Clicando no botão de cancelar reserva em um dos cards de reserva, permite cancelar uma reserva já criada na API. Essa reserva continua sendo exibida, porém com diferenças para demonstrar que ela foi cancelada;
-
-### Figura 6
-
-#### Dashboard (Aba de Reservas vazia)
-
-> Inserir imagem da aba de reservas vazia
-
----
-
-### Figura 7
-
-#### Dashboard (Aba de Reservas com dados)
-
-> Inserir imagem da aba de reservas com dados
-
----
 
 # 4. Conclusão
 
